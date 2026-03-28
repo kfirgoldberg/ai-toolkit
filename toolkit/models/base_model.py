@@ -194,6 +194,9 @@ class BaseModel:
         # when padding to make batch size work, which side padding to use, right or left
         # some llms need left side padding, others need right side
         self.te_padding_side = "right"
+        
+        # can be used on models to invalidate cache if things change.
+        self.latent_space_version = None
 
     # properties for old arch for backwards compatibility
     @property
@@ -1515,6 +1518,8 @@ class BaseModel:
             active_modules = ['vae']
         if device_state_preset in ['cache_clip']:
             active_modules = ['clip']
+        if device_state_preset in ['cache_text_encoder']:
+            active_modules = ['text_encoder']
         if device_state_preset in ['generate']:
             active_modules = ['vae', 'unet',
                               'text_encoder', 'adapter', 'refiner_unet']
